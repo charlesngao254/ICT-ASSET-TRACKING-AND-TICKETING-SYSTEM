@@ -53,6 +53,7 @@ from app.schemas import (
     TicketCreate,
     TicketOut,
     TicketUpdate,
+    UserOut,
     VehicleCreate,
     VehicleLocationIn,
     VehicleLocationOut,
@@ -571,6 +572,21 @@ def list_tasks(
 ) -> list[DelegatedTask]:
     query = select(DelegatedTask).where(or_(DelegatedTask.assigner_id == user.id, DelegatedTask.assignee_id == user.id))
     query = query.order_by(DelegatedTask.due_date).limit(min(max(limit, 1), 250)).offset(max(offset, 0))
+    return list(db.scalars(query))
+
+
+@router.get("/tasks/assignees", response_model=list[UserOut])
+def list_task_assignees(
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[User]:
+    if user.role != Role.HOD.value:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Only HODs can delegate tasks")
+    query = select(User).where(
+        User.department == user.department,
+        User.role == Role.STAFF.value,
+        User.status == AccountStatus.ACTIVE.value,
+    ).order_by(User.full_name)
     return list(db.scalars(query))
 
 

@@ -47,7 +47,7 @@ app.mount("/assets", StaticFiles(directory=web_root / "assets"), name="assets")
 async def security_headers(request: Request, call_next):
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
     response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
     return response
@@ -70,7 +70,7 @@ def health(db: Session = Depends(get_db)) -> HealthOut:
     return HealthOut(status="ok", database="postgresql")
 
 
-@app.get("/", include_in_schema=False)
+@app.api_route("/", methods=["GET", "HEAD"], include_in_schema=False)
 def index() -> FileResponse:
     return FileResponse(web_root / "index.html")
 

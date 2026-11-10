@@ -206,6 +206,7 @@ class VehicleCreate(BaseModel):
     make_model: str = Field(min_length=2, max_length=120)
     department: str = Field(min_length=2, max_length=120)
     driver: str = Field(min_length=2, max_length=120)
+    status: VehicleStatus = VehicleStatus.AVAILABLE
     odometer_km: int = Field(default=0, ge=0)
     fuel_litres_per_100km: Decimal = Field(default=Decimal("0"), ge=0, max_digits=6, decimal_places=2)
     current_location: str = Field(min_length=2, max_length=180)

@@ -448,19 +448,19 @@
       }).join('');
       root.innerHTML=`<div class="modal-backdrop" data-dismiss="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><h2 id="modalTitle">${title}</h2><button class="modal-close" aria-label="Close dialog">&times;</button></div><form class="modal-body" id="recordForm"><div class="form-grid">${fieldHtml}</div><div class="modal-actions"><button class="button" type="button" data-close>Cancel</button><button class="button primary" type="submit">${submitLabel}</button></div></form></section></div>`;
       const form=root.querySelector('form');
-      form.addEventListener('submit',event=>{
+      form.addEventListener('submit',async event=>{
         event.preventDefault(); const values=Object.fromEntries(new FormData(form).entries());
         if(onSubmit) {
-          onSubmit(values);
-          save(); root.innerHTML=''; render(); toast('Changes saved successfully.');
+          const submitButton=form.querySelector('[type="submit"]');submitButton.disabled=true;
+          try {
+            await onSubmit(values);
+            root.innerHTML=''; render(); toast('Changes saved successfully.');
+          } catch(error) {
+            submitButton.disabled=false;toast(error.message||'Unable to save this record.');
+          }
           return;
         }
-        const collection={inventory:'assets',tickets:'tickets',fleet:'vehicles',documents:'documents'}[module];
-        if(module==='inventory') { const next=String(Math.max(24000,...data.assets.map(a=>Number(a.id.split('-')[1])||0))+1); data.assets.unshift({id:`ICT-${next}`,name:values.name,category:values.category,assigned:values.assigned,custodian:values.custodian,condition:values.condition,status:values.condition==='Needs repair'?'Under repair':'In use',location:values.location}); }
-        if(module==='tickets') { const next=1049+data.tickets.length-4; const id=`HD-${next}`; data.tickets.unshift({id,title:values.title,category:values.category,priority:values.priority,requester:values.requester,unit:values.unit,status:'Open',updated:'Just now',description:values.description}); }
-        if(module==='fleet') { data.vehicles.unshift({...values}); data.tracking.unshift({id:values.id,type:'Vehicle',detail:`${values.name} · ${values.unit}`,location:values.location,time:'Just now',state:values.status}); }
-        if(module==='documents') { const next=83+data.documents.length-4; data.documents.unshift({id:`DOC-${String(next).padStart(4,'0')}`,...values}); }
-        save(); root.innerHTML=''; render(); toast('Record added successfully.');
+        toast('This form is not connected to a server action.');
       });
       root.querySelector('.modal-close').addEventListener('click',()=>root.innerHTML='');
       root.querySelector('[data-close]').addEventListener('click',()=>root.innerHTML='');
@@ -487,7 +487,7 @@
       const nav=event.target.closest('[data-nav]');
       if(nav){currentPage=nav.dataset.nav;moduleFilter='All records';render();document.getElementById('sidebar').classList.remove('open');document.getElementById('mobileScrim').classList.remove('visible');return;}
       const add=event.target.closest('[data-action="add"]');
-      if(add){const config=moduleConfig[add.dataset.module];openModal(config.add,config.fields,add.dataset.module);return;}
+      if(add){if(add.dataset.module==='inventory'){createAsset();return;}const config=moduleConfig[add.dataset.module];openModal(config.add,config.fields,add.dataset.module);return;}
       const row=event.target.closest('[data-row-action]'); if(row){updateRow(row.dataset.rowAction,row.dataset.id);return;}
       if(event.target.closest('[data-action="export"]')){exportData();return;}
       if(event.target.closest('[data-action="refresh"]')){toast('Location records are up to date.');return;}
