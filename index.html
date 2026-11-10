@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5edd9">
+  <title>Justice &amp; Constitutional Affairs | Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172a2c;
+      --muted: #718084;
+      --line: #e4e9e6;
+      --canvas: #f5edd9;
+      --paper: #fff;
+      --deep: #102b32;
+      --deep-2: #193b40;
+      --brand: #b42332;
+      --brand-hover: #8f1b28;
+      --brand-soft: #fbe8ea;
+      --green: #27765f;
+      --green-soft: #e7f2eb;
+      --amber: #a66725;
+      --amber-soft: #fbf0df;
+      --red: #b64e43;
+      --red-soft: #f9e9e6;
+      --blue: #426d91;
+      --blue-soft: #eaf1f7;
+      --shadow: 0 12px 30px rgba(21, 44, 43, .06);
+      font-family: "DM Sans", "Segoe UI", sans-serif;
+      font-synthesis: none;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; background: var(--canvas); color: var(--ink); }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .shell { display: flex; min-height: 100vh; }
+    .sidebar { width: 252px; flex: 0 0 252px; min-height: 100vh; background: var(--paper); color: var(--ink); border-right: 1px solid var(--line); display: flex; flex-direction: column; padding: 25px 16px 18px; }
+    .brand { display: flex; align-items: center; gap: 12px; padding: 0 10px 26px; border-bottom: 1px solid var(--line); }
+    .seal { width: 39px; height: 39px; color: #e5be73; display: grid; place-items: center; font: 700 14px "Manrope", sans-serif; letter-spacing: 0; }
+    .seal-art { width: 39px; height: 39px; object-fit: contain; }
+    .brand-title { font: 700 12px/1.35 "Manrope", sans-serif; letter-spacing: 0; }
+    .brand-sub { color: var(--muted); font-size: 10px; margin-top: 3px; }
+    .nav-label { color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0; margin: 24px 12px 9px; }
+    .nav-list { display: grid; gap: 4px; }
+    .nav-item { width: 100%; border: 0; border-radius: 5px; background: transparent; color: #536365; text-align: left; padding: 11px 12px; display: flex; align-items: center; gap: 12px; font-size: 13px; transition: background .18s, color .18s; }
+    .nav-item:hover { background: #f2f5f2; color: var(--ink); }
+    .nav-item.active { background: var(--brand-soft); color: var(--brand); font-weight: 700; }
+    .nav-icon { width: 17px; height: 17px; display: grid; place-items: center; flex: 0 0 17px; }
+    .nav-icon svg { width: 17px; height: 17px; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .sidebar-bottom { margin-top: auto; padding: 10px 0 0; background: var(--paper); color: var(--ink); }
+    .help-box { border: 1px solid var(--line); border-radius: 5px; padding: 14px; margin: 10px 4px 16px; }
+    .help-box strong { font-size: 12px; display: block; margin-bottom: 5px; }
+    .help-box p { color: var(--muted); font-size: 11px; line-height: 1.55; margin: 0 0 12px; }
+    .help-box button { background: none; color: var(--brand); border: 0; padding: 0; font-size: 11px; font-weight: 700; }
+    .profile { border-top: 1px solid var(--line); padding: 16px 7px 0; display: flex; align-items: center; gap: 10px; }
+    .avatar { width: 34px; height: 34px; border-radius: 50%; background: #d3e2d9; color: #224d42; display: grid; place-items: center; font-size: 11px; font-weight: 700; }
+    .profile-name { font-size: 11px; font-weight: 700; }
+    .profile-role { color: var(--muted); font-size: 10px; margin-top: 3px; }
+    .sidebar-bottom .icon-button { color: var(--ink); }
+    .main { min-width: 0; flex: 1; }
+    .topbar { height: 66px; padding: 0 34px; display: flex; align-items: center; justify-content: space-between; background: #e6d3b2; border-bottom: 1px solid #d5c09b; position: sticky; top: 0; z-index: 4; }
+    .crumb { color: var(--muted); font-size: 12px; }
+    .top-actions { display: flex; align-items: center; gap: 16px; }
+    .global-search { display: flex; align-items: center; gap: 9px; width: 235px; color: #756a5a; border: 1px solid #d5c09b; background: #f5ebd9; border-radius: 4px; padding: 8px 10px; }
+    .global-search svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .global-search input { border: 0; outline: 0; background: transparent; min-width: 0; width: 100%; color: var(--ink); font-size: 11px; }
+    .icon-button { border: 0; background: transparent; color: #58696b; padding: 6px; position: relative; display: grid; place-items: center; }
+    .icon-button svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.7; }
+    .notice-dot { position: absolute; width: 6px; height: 6px; background: #c76b4a; border: 1px solid white; border-radius: 50%; top: 4px; right: 3px; }
+    .mobile-menu { display: none; }
+    .content { max-width: 1480px; margin: 0 auto; padding: 32px 36px 48px; }
+    .page-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 25px; }
+    .eyebrow { color: var(--brand); text-transform: uppercase; font-weight: 700; font-size: 10px; letter-spacing: 0; margin: 0 0 9px; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { font: 700 25px/1.2 "Manrope", sans-serif; letter-spacing: 0; margin: 0 0 7px; }
+    .heading-sub { font-size: 12px; color: var(--muted); margin: 0; }
+    .prototype-note { color: var(--amber); font-size: 10px; margin-left: 8px; }
+    .heading-actions { display: flex; align-items: center; gap: 9px; }
+    .date-label { font-size: 11px; color: var(--muted); margin-right: 7px; }
+    .button { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 4px; min-height: 35px; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; font-weight: 700; white-space: nowrap; transition: background .15s, border-color .15s; }
+    .button:hover { background: #f4f8f5; border-color: #bfcfc5; }
+    .button.primary { background: var(--brand); border-color: var(--brand); color: white; }
+    .button.primary:hover { background: var(--brand-hover); }
+    .button svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; margin-bottom: 20px; }
+    .metric { background: var(--paper); border: 1px solid var(--line); border-radius: 5px; padding: 17px 18px 15px; min-height: 118px; position: relative; overflow: hidden; }
+    .metric:after { content: ""; position: absolute; width: 58px; height: 58px; border-radius: 50%; right: -17px; top: -19px; background: var(--metric-tint, #edf4ef); }
+    .metric-top { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; position: relative; z-index: 1; }
+    .metric-icon { width: 25px; height: 25px; border-radius: 4px; background: var(--metric-tint, var(--brand-soft)); color: var(--metric-color, var(--brand)); display: grid; place-items: center; }
+    .metric-icon svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .metric-value { font: 700 25px "Manrope", sans-serif; margin: 12px 0 4px; letter-spacing: 0; }
+    .metric-note { font-size: 10px; color: var(--muted); }
+    .metric-note b { color: var(--brand); font-weight: 700; }
+    .dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.52fr) minmax(280px, .92fr); gap: 16px; align-items: start; }
+    .stack { display: grid; gap: 16px; }
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 5px; min-width: 0; }
+    .panel-head { min-height: 57px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 17px; border-bottom: 1px solid var(--line); }
+    .panel-title { font: 700 13px "Manrope", sans-serif; margin: 0; }
+    .panel-caption { font-size: 10px; color: var(--muted); margin: 4px 0 0; }
+    .text-link { border: 0; padding: 4px 0; background: none; color: var(--brand); font-size: 10px; font-weight: 700; }
+    .table-wrap { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; text-align: left; white-space: nowrap; }
+    th { color: #829093; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0; padding: 11px 16px; background: #fbfcfb; }
+    td { padding: 12px 16px; font-size: 10px; border-top: 1px solid #edf0ed; }
+    td strong { font-size: 10px; font-weight: 700; }
+    .subtext { color: var(--muted); font-size: 9px; margin-top: 3px; }
+    .status { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border-radius: 3px; font-size: 9px; font-weight: 700; }
+    .status:before { content: ""; width: 5px; height: 5px; background: currentColor; border-radius: 50%; }
+    .status.green { background: var(--green-soft); color: var(--green); }
+    .status.amber { background: var(--amber-soft); color: var(--amber); }
+    .status.red { background: var(--red-soft); color: var(--red); }
+    .status.blue { background: var(--blue-soft); color: var(--blue); }
+    .status.gray { background: #eef1ef; color: #6f7d7e; }
+    .ticket-id { color: var(--blue); font-weight: 700; }
+    .activity-list { padding: 4px 17px 7px; }
+    .activity-item { display: grid; grid-template-columns: 27px 1fr auto; gap: 9px; align-items: start; padding: 13px 0; border-bottom: 1px solid #edf0ed; }
+    .activity-item:last-child { border-bottom: 0; }
+    .activity-mark { width: 25px; height: 25px; background: var(--brand-soft); border-radius: 50%; display: grid; place-items: center; color: var(--brand); }
+    .activity-mark svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .activity-copy { font-size: 10px; line-height: 1.45; }
+    .activity-copy strong { font-weight: 700; }
+    .activity-time { color: #899496; font-size: 9px; white-space: nowrap; }
+    .fleet-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 0; padding: 7px 17px; }
+    .fleet-cell { padding: 11px 0; }
+    .fleet-cell:nth-child(odd) { border-right: 1px solid var(--line); }
+    .fleet-cell:nth-child(even) { padding-left: 17px; }
+    .fleet-cell:nth-child(n+3) { border-top: 1px solid var(--line); }
+    .fleet-number { font: 700 18px "Manrope", sans-serif; }
+    .fleet-label { color: var(--muted); font-size: 10px; margin-top: 3px; }
+    .page-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 15px; border-bottom: 1px solid var(--line); }
+    .toolbar-left, .toolbar-right { display: flex; align-items: center; gap: 8px; }
+    .filter-select, .inline-search { background: #fff; border: 1px solid var(--line); border-radius: 4px; min-height: 32px; color: #506264; font-size: 10px; padding: 0 9px; }
+    .inline-search { width: 190px; outline: 0; }
+    .module-table td { padding-top: 13px; padding-bottom: 13px; }
+    .row-action { border: 0; background: transparent; color: var(--brand); padding: 4px; font-size: 10px; font-weight: 700; }
+    .empty-state { text-align: center; color: var(--muted); font-size: 11px; padding: 38px 15px; }
+    .tracking-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(260px, .85fr); gap: 16px; }
+    .tracking-list { padding: 0 17px; }
+    .tracking-entry { display: grid; grid-template-columns: 30px 1fr auto; gap: 10px; align-items: start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .tracking-entry:last-child { border-bottom: 0; }
+    .track-pin { color: var(--brand); background: var(--brand-soft); width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; }
+    .track-pin svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .track-title { font-size: 11px; font-weight: 700; }
+    .track-meta { color: var(--muted); font-size: 9px; margin-top: 4px; }
+    .track-time { color: var(--muted); font-size: 9px; }
+    .map-panel { min-height: 330px; overflow: hidden; position: relative; background: #eaf0e8; }
+    .map-pattern { position: absolute; inset: 0; opacity: .8; background-image: linear-gradient(34deg, transparent 47%, #d2dfd2 48%, #d2dfd2 50%, transparent 51%), linear-gradient(112deg, transparent 43%, #d5e0d5 44%, #d5e0d5 46%, transparent 47%), linear-gradient(8deg, transparent 62%, #d5e0d5 63%, #d5e0d5 65%, transparent 66%), repeating-linear-gradient(0deg, transparent, transparent 46px, rgba(255,255,255,.6) 47px, rgba(255,255,255,.6) 49px); background-size: 180px 150px, 210px 180px, 245px 190px, 100% 100%; }
+    .map-river { position: absolute; width: 135%; height: 42px; left: -10%; top: 54%; border-radius: 50%; background: #c9e2e4; border: 6px solid rgba(255,255,255,.64); transform: rotate(-17deg); }
+    .map-label { position: absolute; color: #789087; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
+    .map-label.one { top: 22%; left: 18%; } .map-label.two { top: 68%; left: 57%; } .map-label.three { top: 36%; right: 12%; }
+    .map-marker { position: absolute; width: 24px; height: 24px; border: 3px solid white; border-radius: 50% 50% 50% 0; background: var(--brand); box-shadow: 0 2px 6px #72878088; transform: rotate(-45deg); }
+    .map-marker:after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: white; position: absolute; top: 6px; left: 6px; }
+    .map-marker.m1 { left: 39%; top: 36%; } .map-marker.m2 { left: 69%; top: 56%; background: #bf7940; } .map-marker.m3 { left: 23%; top: 68%; background: #527a99; }
+    .map-legend { position: absolute; bottom: 12px; left: 12px; display: flex; gap: 12px; padding: 8px 10px; border-radius: 4px; background: rgba(255,255,255,.9); font-size: 9px; }
+    .legend-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--brand); margin-right: 4px; }
+    .legend-dot.amber { background: #bf7940; } .legend-dot.blue { background: #527a99; }
+    .doc-title { max-width: 245px; overflow: hidden; text-overflow: ellipsis; }
+    .modal-backdrop { position: fixed; inset: 0; z-index: 10; background: rgba(11,31,34,.48); display: grid; place-items: center; padding: 16px; }
+    .modal { width: min(100%, 520px); max-height: calc(100vh - 32px); overflow: auto; background: #fff; border-radius: 6px; box-shadow: 0 24px 70px #112c3240; animation: appear .16s ease-out; }
+    @keyframes appear { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--line); }
+    .modal-head h2 { font: 700 16px "Manrope", sans-serif; margin: 0; }
+    .modal-close { border: 0; background: transparent; color: var(--muted); font-size: 22px; line-height: 1; }
+    .modal-body { padding: 19px 20px 20px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: grid; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { color: #607173; font-size: 10px; font-weight: 700; }
+    .field input, .field select, .field textarea { border: 1px solid #dfe6e2; border-radius: 4px; outline: 0; padding: 9px 10px; color: var(--ink); background: #fff; font-size: 11px; min-width: 0; }
+    .field textarea { min-height: 76px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: #75a18e; box-shadow: 0 0 0 2px #e6f0e9; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+    .toast { position: fixed; z-index: 20; right: 22px; bottom: 20px; padding: 12px 16px; border-radius: 4px; background: var(--deep); color: white; box-shadow: var(--shadow); font-size: 11px; animation: appear .15s ease-out; }
+    .mobile-scrim { display: none; }
+    .auth-screen { display: none; min-height: 100vh; background: #f9fafb; color: #111827; padding: 0 16px 64px; position: relative; }
+    .auth-layout { width: min(100%, 448px); min-height: calc(100vh - 64px); margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+    .auth-form { width: 100%; padding: 32px 40px; background: #fff; border: 1px solid #e5e7eb; border-radius: 9px; color: #111827; box-shadow: 0 12px 24px rgba(31,41,55,.1); }
+    .auth-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 27px; }
+    .auth-mark { display: flex; align-items: center; gap: 10px; }
+    .auth-seal { width: 36px; height: auto; display: block; }
+    .auth-mark p { font: 700 15px "Manrope",sans-serif; color: #111827; margin: 0; white-space: nowrap; }
+    .auth-mark span { margin: 0 8px; color: #d1d5db; font-weight: 400; }
+    .auth-mark strong { font-weight: 600; color: #374151; }
+    .auth-heading { font-size: 14px; font-weight: 400; color: #747376; margin: 8px 0 0; }
+    .auth-fields { display: grid; gap: 22px; }
+    .auth-field { display: grid; gap: 8px; }
+    .auth-field label { color: #1f2937; font-size: 14px; font-weight: 500; }
+    .auth-input-wrap { position: relative; }
+    .auth-field input[type="email"], .auth-field input[type="password"], .auth-field input[type="text"] { width: 100%; min-width: 0; height: 36px; border: 1px solid #d1d5db; border-radius: 7px; background: #fff; outline: 0; color: #111827; padding: 7px 10px; font-size: 13px; }
+    .auth-field select { width: 100%; min-width: 0; height: 36px; border: 1px solid #d1d5db; border-radius: 7px; background: #fff; outline: 0; color: #111827; padding: 7px 10px; font-size: 13px; }
+    .auth-field input:focus { border-color: #1e3a6e; box-shadow: 0 0 0 2px rgba(30,58,110,.12); }
+    .auth-input-wrap input { padding-right: 42px !important; }
+    .auth-description { color: #71717a; font-size: 12px; line-height: 1.4; margin: 0; }
+    .auth-password-toggle { position: absolute; right: 9px; top: 50%; transform: translateY(-50%); border: 0; padding: 4px; background: transparent; color: #9ca3af; display: grid; place-items: center; }
+    .auth-password-toggle svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+    .auth-options { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 21px; }
+    .auth-remember { display: inline-flex; align-items: center; gap: 8px; color: #374151; font-size: 12px; }
+    .auth-remember input { accent-color: #1e3a6e; width: 16px; height: 16px; margin: 0; }
+    .auth-link { border: 0; background: none; color: #1d4ed8; padding: 0; font-size: 12px; }
+    .auth-submit { width: 100%; height: 36px; margin-top: 20px; border: 0; border-radius: 6px; background: #1e3a6e; color: #fff; font-size: 13px; font-weight: 500; }
+    .auth-submit:disabled { opacity: .48; cursor: not-allowed; }
+    .auth-access { color: #374151; text-align: center; font-size: 12px; margin: 20px 0 0; }
+    .auth-access button { border: 0; background: none; color: #1d4ed8; padding: 0; font-size: inherit; }
+    .auth-demo-note { color: #7d828a; font-size: 10px; line-height: 1.45; text-align: center; margin: 15px 0 0; }
+    .auth-message { min-height: 15px; color: var(--red); font-size: 11px; margin: 8px 0 -7px; }
+    .auth-footer { position: fixed; bottom: 0; left: 0; right: 0; height: 64px; display: flex; align-items: center; justify-content: center; color: #6b7280; font-size: 11px; }
+    .role-tag { display: inline-flex; background: var(--brand-soft); color: var(--brand); padding: 4px 7px; border-radius: 3px; font-size: 9px; font-weight: 700; }
+    .workflow-chart { padding: 20px 18px 17px; }
+    .chart-rows { display: grid; gap: 13px; }
+    .chart-row { display: grid; grid-template-columns: 112px 1fr 22px; align-items: center; gap: 10px; font-size: 10px; }
+    .chart-label { color: #657476; }
+    .chart-track { height: 8px; border-radius: 10px; background: #edf1ee; overflow: hidden; }
+    .chart-fill { height: 100%; border-radius: inherit; background: var(--brand); transition: width .25s ease; }
+    .chart-count { text-align: right; color: #536365; font-weight: 700; }
+    .memo-actions { display: flex; flex-wrap: wrap; gap: 7px; }
+    .detail-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 15px; }
+    .detail-block { border: 1px solid var(--line); border-radius: 4px; padding: 13px; margin-bottom: 10px; }
+    .detail-block h3 { font: 700 11px "Manrope",sans-serif; margin: 0 0 9px; }
+    .comment-item { border-top: 1px solid var(--line); padding: 10px 0; font-size: 10px; line-height: 1.5; }
+    .comment-meta { color: var(--muted); font-size: 9px; margin-bottom: 4px; display: flex; justify-content: space-between; gap: 8px; }
+    .attachment-row { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); font-size: 10px; }
+    .attachment-row:first-of-type { border-top: 0; }
+    .preview-frame { width: 100%; height: min(65vh,620px); border: 1px solid var(--line); background: #f5f7f4; }
+    .preview-image { max-width: 100%; max-height: 65vh; display: block; margin: auto; }
+    .private-note { color: #8c612b; font-size: 9px; }
+    .task-private { border-left: 3px solid #c9984d; padding-left: 10px; }
+    .stage-line { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 9px; color: #667678; }
+    .stage-step { padding: 5px 7px; background: #eef2ef; border-radius: 3px; }
+    .stage-step.done { color: #27765f; background: #e7f2eb; }
+    .stage-step.current { color: #8b5a20; background: #fbf0df; font-weight: 700; }
+    .account-row { display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr auto; align-items: center; gap: 12px; padding: 12px 15px; border-top: 1px solid var(--line); font-size: 10px; }
+    .account-row:first-child { border-top: 0; }
+    @media (max-width: 1050px) {
+      .sidebar { width: 225px; flex-basis: 225px; }
+      .content { padding: 27px 24px 40px; }
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .stack { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 700px) {
+      .auth-screen { padding: 24px 16px; }
+      .auth-layout { min-height: calc(100vh - 48px); grid-template-columns: 1fr; gap: 25px; max-width: 440px; }
+      .auth-brand h1 { font-size: 25px; }
+      .auth-brand .seal { width: min(240px, 100%); margin-bottom: 12px; }
+      .auth-brand p { margin-bottom: 0; }
+      .auth-form { padding: 22px; }
+      .detail-grid { grid-template-columns: 1fr; }
+      .account-row { grid-template-columns: 1fr 1fr; }
+      .sidebar { position: fixed; z-index: 8; left: -265px; top: 0; width: 252px; height: 100vh; min-height: 0; transition: left .2s ease; }
+      .sidebar.open { left: 0; }
+      .mobile-scrim.visible { display: block; position: fixed; inset: 0; z-index: 7; background: #102b3266; }
+      .main { width: 100%; }
+      .topbar { height: 58px; padding: 0 15px; }
+      .mobile-menu { display: grid; }
+      .crumb { display: none; }
+      .top-actions { gap: 8px; }
+      .global-search { width: min(48vw, 205px); }
+      .content { padding: 24px 15px 34px; }
+      .page-heading { align-items: flex-start; flex-direction: column; gap: 14px; margin-bottom: 18px; }
+      h1 { font-size: 22px; }
+      .heading-actions { width: 100%; justify-content: space-between; }
+      .date-label { display: none; }
+      .metrics { gap: 9px; }
+      .metric { padding: 13px; min-height: 107px; }
+      .metric-value { font-size: 22px; margin-top: 10px; }
+      .metric-top { font-size: 10px; }
+      .stack { grid-template-columns: 1fr; }
+      .tracking-layout { grid-template-columns: 1fr; }
+      .page-toolbar { align-items: flex-start; flex-direction: column; }
+      .toolbar-left, .toolbar-right { width: 100%; }
+      .inline-search { flex: 1; width: auto; }
+    }
+    @media (max-width: 420px) {
+      .global-search { width: 145px; }
+      .top-actions { gap: 3px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric-top { gap: 5px; }
+      .metric-note { font-size: 9px; }
+      .button { padding: 0 9px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-screen" id="authScreen"></div>
+  <div class="shell" id="appShell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="seal"><img class="seal-art" src="assets/kenya-coat-of-arms.png" alt="Coat of arms of the Republic of Kenya"></div>
+        <div><div class="brand-title">JUSTICE &amp; CONSTITUTIONAL AFFAIRS</div><div class="brand-sub">Department operations</div></div>
+      </div>
+      <div class="nav-label">Workspace</div>
+      <nav class="nav-list" id="navigation" aria-label="Main navigation"></nav>
+      <div class="sidebar-bottom">
+        <div class="help-box"><strong>Need assistance?</strong><p>Contact the ICT service desk for system access or technical support.</p><button data-nav="tickets">Open service desk &rarr;</button></div>
+        <div class="profile"><div class="avatar" id="profileAvatar">JM</div><div style="flex:1"><div class="profile-name" id="profileName">Department administrator</div><div class="profile-role" id="profileRole">System administrator</div></div><button class="icon-button" id="logoutButton" aria-label="Sign out" title="Sign out"><svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></svg></button></div>
+      </div>
+    </aside>
+    <div class="mobile-scrim" id="mobileScrim"></div>
+    <main class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:14px"><button class="icon-button mobile-menu" id="menuButton" aria-label="Open navigation"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><div class="crumb">Department / <span id="crumbPage">Overview</span></div></div>
+        <div class="top-actions">
+          <label class="global-search"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4 4"/></svg><input id="globalSearch" type="search" placeholder="Search records" aria-label="Search records"></label>
+          <button class="icon-button" id="notificationsButton" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notice-dot"></span></button>
+        </div>
+      </header>
+      <section class="content" id="content"></section>
+    </main>
+  </div>
+  <div id="modalRoot"></div>
+  <div id="toastRoot" aria-live="polite"></div>
+  <script>
+    const icons = {
+      overview: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+      inventory: '<rect x="3" y="7" width="18" height="14" rx="2"/><path d="M8 7V4h8v3M3 12h18M10 12v2h4v-2"/>',
+      tickets: '<path d="M4 5h16v4a3 3 0 0 0 0 6v4H4v-4a3 3 0 0 0 0-6V5Z"/><path d="M12 8v2m0 4v2"/>',
+      fleet: '<path d="M3 7h12v10H3zM15 10h4l3 3v4h-7z"/><circle cx="7" cy="19" r="2"/><circle cx="18" cy="19" r="2"/>',
+      documents: '<path d="M6 3h8l5 5v13H6z"/><path d="M14 3v6h5M9 13h7M9 17h7"/>',
+      tracking: '<path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/>'
+    };
+    const navigationItems = [
+      ['overview', 'Overview'], ['inventory', 'ICT inventory'], ['tickets', 'Service desk'],
+      ['fleet', 'Fleet management'], ['documents', 'Document management'], ['tracking', 'Tracking']
+    ];
+    const seed = {
+      assets: [
+        { id:'ICT-24018', name:'Dell Latitude 5440', category:'Laptop', assigned:'Legal Services', custodian:'A. Njoroge', condition:'Good', status:'In use', location:'Justice Tower · 4F' },
+        { id:'ICT-24019', name:'HP LaserJet Pro M404', category:'Printer', assigned:'Human Rights', custodian:'M. Otieno', condition:'Good', status:'In use', location:'Rights Centre · 2F' },
+        { id:'ICT-24020', name:'Lenovo ThinkCentre M70', category:'Desktop', assigned:'Constitutional Affairs', custodian:'P. Wanjiku', condition:'Fair', status:'In use', location:'Justice Tower · 3F' },
+        { id:'ICT-24021', name:'Cisco Catalyst 9200', category:'Network', assigned:'ICT Directorate', custodian:'ICT Store', condition:'Good', status:'In store', location:'Central ICT Store' },
+        { id:'ICT-24022', name:'Dell Latitude 5420', category:'Laptop', assigned:'Legal Services', custodian:'ICT Store', condition:'Needs repair', status:'Under repair', location:'ICT Workshop' },
+        { id:'ICT-24023', name:'Epson WorkForce DS-790WN', category:'Scanner', assigned:'Records Office', custodian:'S. Kamau', condition:'Good', status:'In use', location:'Justice Tower · 1F' }
+      ],
+      tickets: [
+        { id:'HD-1048', title:'VPN access unavailable', category:'Network access', priority:'High', requester:'L. Mwangi', unit:'Legal Services', status:'In progress', updated:'18 min ago' },
+        { id:'HD-1047', title:'Laptop battery replacement', category:'Hardware', priority:'Normal', requester:'R. Achieng', unit:'Human Rights', status:'Open', updated:'42 min ago' },
+        { id:'HD-1046', title:'Request access to case archive', category:'Access request', priority:'Normal', requester:'D. Kiptoo', unit:'Constitutional Affairs', status:'Waiting', updated:'2 hrs ago' },
+        { id:'HD-1045', title:'Printer queue not responding', category:'Printing', priority:'Low', requester:'E. Wambui', unit:'Records Office', status:'Resolved', updated:'Yesterday' }
+      ],
+      vehicles: [
+        { id:'GOK 482J', name:'Toyota Land Cruiser', unit:'Legal Services', driver:'K. Mutua', status:'On assignment', location:'Nakuru County', service:'12 Dec 2026' },
+        { id:'GOK 193A', name:'Toyota Hiace', unit:'Human Rights', driver:'J. Barasa', status:'Available', location:'Department HQ', service:'03 Jan 2027' },
+        { id:'GOK 771M', name:'Isuzu D-Max', unit:'Constitutional Affairs', driver:'S. Maina', status:'Maintenance', location:'Central Garage', service:'09 Nov 2026' },
+        { id:'GOK 608K', name:'Toyota Corolla', unit:'Administration', driver:'N. Ouma', status:'Available', location:'Department HQ', service:'21 Dec 2026' }
+      ],
+      documents: [
+        { id:'DOC-0082', title:'Quarterly Human Rights Compliance Report', type:'Report', unit:'Human Rights', owner:'M. Otieno', date:'07 Nov 2026', status:'For review' },
+        { id:'DOC-0081', title:'Legal Aid Programme - Field Visit Schedule', type:'Schedule', unit:'Legal Services', owner:'A. Njoroge', date:'06 Nov 2026', status:'Approved' },
+        { id:'DOC-0080', title:'Constitutional Review Committee Minutes', type:'Minutes', unit:'Constitutional Affairs', owner:'P. Wanjiku', date:'05 Nov 2026', status:'Draft' },
+        { id:'DOC-0079', title:'Records Retention and Disposal Policy', type:'Policy', unit:'Administration', owner:'S. Kamau', date:'03 Nov 2026', status:'Approved' }
+      ],
+      tracking: [
+        { id:'GOK 482J', type:'Vehicle', detail:'Toyota Land Cruiser · Legal Services', location:'Nakuru County Court', time:'10:42 AM', state:'On assignment' },
+        { id:'ICT-24018', type:'ICT asset', detail:'Dell Latitude 5440 · A. Njoroge', location:'Justice Tower · 4F', time:'9:16 AM', state:'Checked in' },
+        { id:'GOK 193A', type:'Vehicle', detail:'Toyota Hiace · Human Rights', location:'Department HQ', time:'8:03 AM', state:'Available' },
+        { id:'ICT-24022', type:'ICT asset', detail:'Dell Latitude 5420 · ICT Workshop', location:'Central ICT Store', time:'Yesterday', state:'Under repair' }
+      ]
+    };
+    const storageKey = 'justice-ops-prototype-v1';
+    let data;
+    try { data = JSON.parse(localStorage.getItem(storageKey)) || structuredClone(seed); } catch { data = structuredClone(seed); }
+    let currentPage = 'overview';
+    let searchQuery = '';
+    let moduleFilter = 'All records';
+    const content = document.getElementById('content');
+
+    function save() { localStorage.setItem(storageKey, JSON.stringify(data)); }
+    function svg(name) { return `<svg viewBox="0 0 24 24" aria-hidden="true">${icons[name] || ''}</svg>`; }
+    function esc(value='') { return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char])); }
+    function statusClass(value) {
+      const lower = String(value).toLowerCase();
+      if (/repair|maintenance|high|review|overdue|urgent/.test(lower)) return 'amber';
+      if (/resolved|approved|good|available|checked in|in use/.test(lower)) return 'green';
+      if (/open|draft|store|waiting/.test(lower)) return 'blue';
+      if (/out of service|critical/.test(lower)) return 'red';
+      return 'gray';
+    }
+    function badge(value) { return `<span class="status ${statusClass(value)}">${esc(value)}</span>`; }
+    function navRender() {
+      document.getElementById('navigation').innerHTML = navigationItems.map(([id,label]) => `<button class="nav-item ${id===currentPage?'active':''}" data-nav="${id}"><span class="nav-icon">${svg(id)}</span>${label}</button>`).join('');
+      document.getElementById('crumbPage').textContent = navigationItems.find(([id])=>id===currentPage)?.[1] || 'Overview';
+    }
+    function pageHeader(eyebrow,title,sub,action='') {
+      return `<div class="page-heading"><div><p class="eyebrow">${eyebrow}</p><h1>${title}</h1><p class="heading-sub">${sub}<span class="prototype-note">Prototype · sample data saved in this browser</span></p></div><div class="heading-actions">${action}</div></div>`;
+    }
+    function metric(label,value,note,icon,tint,color) {
+      return `<div class="metric" style="--metric-tint:${tint};--metric-color:${color}"><div class="metric-top"><span class="metric-icon">${svg(icon)}</span>${label}</div><div class="metric-value">${value}</div><div class="metric-note">${note}</div></div>`;
+    }
+    function matches(record) { return !searchQuery || Object.values(record).join(' ').toLowerCase().includes(searchQuery.toLowerCase()); }
+    function renderOverview() {
+      const openTickets = data.tickets.filter(t=>!['Resolved','Closed'].includes(t.status)).length;
+      const availableFleet = data.vehicles.filter(v=>v.status==='Available').length;
+      const tickets = data.tickets.filter(matches).slice(0,4);
+      const activities = [
+        ['tickets',`<strong>HD-1048</strong> assigned to ICT Network Team`,'18 min ago'],
+        ['documents',`<strong>DOC-0082</strong> submitted for review`,'1 hr ago'],
+        ['inventory',`<strong>ICT-24018</strong> checked in at Justice Tower`,'2 hrs ago'],
+        ['fleet',`<strong>GOK 482J</strong> trip started · Nakuru County`,'3 hrs ago']
+      ];
+      return `${pageHeader('Department operations','Good morning, Jordan','A clear view of assets, requests, fleet and departmental records.',`<span class="date-label">Monday, 9 November 2026</span><button class="button" data-action="export">${svg('documents')} Export report</button>`)}
+        <div class="metrics">${metric('ICT assets',data.assets.length.toLocaleString(),'Across department units','inventory','#fbe8ea','#b42332')}${metric('Open service requests',openTickets,'<b>2 high priority</b> need attention','tickets','#fbf0df','#a66725')}${metric('Fleet vehicles',data.vehicles.length,`${availableFleet} currently available`,'fleet','#eaf1f7','#426d91')}${metric('Documents for review',data.documents.filter(d=>d.status==='For review').length,'Awaiting your team','documents','#f5ece2','#a66725')}</div>
+        <div class="dashboard-grid"><div class="panel"><div class="panel-head"><div><h2 class="panel-title">Service desk queue</h2><p class="panel-caption">Latest requests from across the department</p></div><button class="text-link" data-nav="tickets">View all requests &rarr;</button></div>
+          <div class="table-wrap"><table><thead><tr><th>Request</th><th>Requester</th><th>Priority</th><th>Status</th><th>Updated</th></tr></thead><tbody>${tickets.map(t=>`<tr><td><span class="ticket-id">${esc(t.id)}</span><div class="subtext">${esc(t.title)}</div></td><td>${esc(t.requester)}<div class="subtext">${esc(t.unit)}</div></td><td>${badge(t.priority)}</td><td>${badge(t.status)}</td><td>${esc(t.updated)}</td></tr>`).join('') || `<tr><td colspan="5" class="empty-state">No matching requests.</td></tr>`}</tbody></table></div></div>
+          <div class="stack"><div class="panel"><div class="panel-head"><div><h2 class="panel-title">Fleet at a glance</h2><p class="panel-caption">Current vehicle availability</p></div><button class="text-link" data-nav="fleet">Fleet details &rarr;</button></div><div class="fleet-summary"><div class="fleet-cell"><div class="fleet-number">${availableFleet}</div><div class="fleet-label">Available</div></div><div class="fleet-cell"><div class="fleet-number">${data.vehicles.filter(v=>v.status==='On assignment').length}</div><div class="fleet-label">On assignment</div></div><div class="fleet-cell"><div class="fleet-number">${data.vehicles.filter(v=>v.status==='Maintenance').length}</div><div class="fleet-label">In maintenance</div></div><div class="fleet-cell"><div class="fleet-number">${data.vehicles.length}</div><div class="fleet-label">Total vehicles</div></div></div></div>
+          <div class="panel"><div class="panel-head"><div><h2 class="panel-title">Recent activity</h2><p class="panel-caption">Updates across your workspace</p></div></div><div class="activity-list">${activities.map(([icon,text,time])=>`<div class="activity-item"><span class="activity-mark">${svg(icon)}</span><div class="activity-copy">${text}</div><span class="activity-time">${time}</span></div>`).join('')}</div></div></div></div>`;
+    }
+    const moduleConfig = {
+      inventory: { eyebrow:'Asset register', title:'ICT inventory', sub:'Manage equipment, assigned custodians and asset condition.', add:'Add asset', fields:[['name','Asset name','text','e.g. Dell Latitude 5450'],['category','Category','select','Laptop|Desktop|Printer|Network|Scanner|Other'],['assigned','Department unit','select','Legal Services|Human Rights|Constitutional Affairs|Administration|ICT Directorate'],['custodian','Custodian','text','Full name'],['condition','Condition','select','Good|Fair|Needs repair|Retired'],['location','Current location','text','Building and floor']], rows:()=>data.assets.filter(matches).map(a=>`<tr><td><strong>${esc(a.id)}</strong><div class="subtext">${esc(a.name)}</div></td><td>${esc(a.category)}</td><td>${esc(a.assigned)}</td><td>${esc(a.custodian)}</td><td>${badge(a.condition)}</td><td>${badge(a.status)}</td><td>${esc(a.location)}</td><td><button class="row-action" data-row-action="asset" data-id="${esc(a.id)}">Update</button></td></tr>`), headings:['Asset / Tag','Category','Assigned unit','Custodian','Condition','Status','Location',''] },
+      tickets: { eyebrow:'ICT support', title:'Service desk', sub:'Log, prioritize and follow department ICT requests through resolution.', add:'New request', fields:[['title','Request title','text','Briefly describe the issue'],['category','Request type','select','Hardware|Software|Network access|Access request|Printing|Other'],['priority','Priority','select','Low|Normal|High|Urgent'],['requester','Requester','text','Full name'],['unit','Department unit','select','Legal Services|Human Rights|Constitutional Affairs|Administration|ICT Directorate'],['description','Description','textarea','Add relevant details']], rows:()=>data.tickets.filter(matches).map(t=>`<tr><td><strong class="ticket-id">${esc(t.id)}</strong><div class="subtext">${esc(t.title)}</div></td><td>${esc(t.category)}</td><td>${esc(t.requester)}<div class="subtext">${esc(t.unit)}</div></td><td>${badge(t.priority)}</td><td>${badge(t.status)}</td><td>${esc(t.updated)}</td><td><button class="row-action" data-row-action="ticket" data-id="${esc(t.id)}">Update status</button></td></tr>`), headings:['Request','Type','Requester','Priority','Status','Last updated',''] },
+      fleet: { eyebrow:'Transport operations', title:'Fleet management', sub:'Coordinate vehicles, assignments, drivers and upcoming service dates.', add:'Add vehicle', fields:[['id','Registration number','text','e.g. GOK 123A'],['name','Vehicle','text','Make and model'],['unit','Assigned unit','select','Legal Services|Human Rights|Constitutional Affairs|Administration'],['driver','Assigned driver','text','Full name'],['status','Status','select','Available|On assignment|Maintenance|Out of service'],['location','Current location','text','Town or facility'],['service','Next service date','date','']], rows:()=>data.vehicles.filter(matches).map(v=>`<tr><td><strong>${esc(v.id)}</strong><div class="subtext">${esc(v.name)}</div></td><td>${esc(v.unit)}</td><td>${esc(v.driver)}</td><td>${badge(v.status)}</td><td>${esc(v.location)}</td><td>${esc(v.service)}</td><td><button class="row-action" data-row-action="vehicle" data-id="${esc(v.id)}">Update</button></td></tr>`), headings:['Vehicle','Assigned unit','Driver','Status','Last known location','Next service',''] },
+      documents: { eyebrow:'Records and correspondence', title:'Document management', sub:'Register, review and track departmental documents and records.', add:'Register document', fields:[['title','Document title','text','Document name'],['type','Document type','select','Policy|Report|Minutes|Schedule|Correspondence|Other'],['unit','Department unit','select','Legal Services|Human Rights|Constitutional Affairs|Administration'],['owner','Document owner','text','Full name'],['date','Received date','date',''],['status','Workflow status','select','Draft|For review|Approved|Archived']], rows:()=>data.documents.filter(matches).map(d=>`<tr><td><strong class="doc-title">${esc(d.title)}</strong><div class="subtext">${esc(d.id)}</div></td><td>${esc(d.type)}</td><td>${esc(d.unit)}</td><td>${esc(d.owner)}</td><td>${esc(d.date)}</td><td>${badge(d.status)}</td><td><button class="row-action" data-row-action="document" data-id="${esc(d.id)}">Review</button></td></tr>`), headings:['Document','Type','Department unit','Owner','Date received','Workflow',''] }
+    };
+    function renderModule(key) {
+      const config = moduleConfig[key];
+      const filters = key==='tickets' ? ['All records','Open','In progress','Waiting','Resolved'] : key==='fleet' ? ['All records','Available','On assignment','Maintenance','Out of service'] : key==='documents' ? ['All records','Draft','For review','Approved','Archived'] : key==='inventory' ? ['All records','In use','In store','Under repair'] : ['All records'];
+      const filtered = config.rows().filter(row=>moduleFilter==='All records'||row.includes(`>${moduleFilter}<`));
+      return `${pageHeader(config.eyebrow,config.title,config.sub,`<button class="button primary" data-action="add" data-module="${key}">${svg('inventory')} ${config.add}</button>`)}
+        <div class="panel"><div class="page-toolbar"><div class="toolbar-left"><select class="filter-select" id="moduleFilter" aria-label="Filter records">${filters.map(f=>`<option ${f===moduleFilter?'selected':''}>${f}</option>`).join('')}</select><span class="subtext">${filtered.length} records</span></div><div class="toolbar-right"><input class="inline-search" id="moduleSearch" type="search" placeholder="Search this list" value="${esc(searchQuery)}" aria-label="Search this list"><button class="button" data-action="export">Export</button></div></div><div class="table-wrap"><table class="module-table"><thead><tr>${config.headings.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${filtered.join('')||`<tr><td colspan="${config.headings.length}" class="empty-state">No records match this view.</td></tr>`}</tbody></table></div></div>`;
+    }
+    function renderTracking() {
+      const entries=data.tracking.filter(matches);
+      return `${pageHeader('Live operations','Tracking','Latest recorded locations for departmental vehicles and ICT assets.',`<button class="button" data-action="refresh">${svg('tracking')} Refresh locations</button>`)}
+      <div class="tracking-layout"><div class="panel"><div class="panel-head"><div><h2 class="panel-title">Recent location updates</h2><p class="panel-caption">Most recent check-ins and fleet activity</p></div><select class="filter-select" id="trackingFilter"><option>All records</option><option>Vehicle</option><option>ICT asset</option></select></div><div class="tracking-list">${entries.map(t=>`<div class="tracking-entry"><span class="track-pin">${svg(t.type==='Vehicle'?'fleet':'tracking')}</span><div><div class="track-title">${esc(t.id)} <span class="subtext">· ${esc(t.type)}</span></div><div class="track-meta">${esc(t.detail)}</div><div class="track-meta">${esc(t.location)} · ${badge(t.state)}</div></div><span class="track-time">${esc(t.time)}</span></div>`).join('')||'<div class="empty-state">No matching location updates.</div>'}</div></div>
+      <div class="panel map-panel" aria-label="Illustrative location overview"><div class="map-pattern"></div><div class="map-river"></div><span class="map-label one">Department HQ</span><span class="map-label two">Nakuru</span><span class="map-label three">Rights Centre</span><span class="map-marker m1"></span><span class="map-marker m2"></span><span class="map-marker m3"></span><div class="map-legend"><span><i class="legend-dot"></i>ICT asset</span><span><i class="legend-dot amber"></i>Vehicle</span><span><i class="legend-dot blue"></i>Office</span></div></div></div>`;
+    }
+    function render() {
+      navRender();
+      if (currentPage==='overview') content.innerHTML=renderOverview();
+      else if (currentPage==='tracking') content.innerHTML=renderTracking();
+      else content.innerHTML=renderModule(currentPage);
+      document.getElementById('globalSearch').value=searchQuery;
+    }
+    function toast(message) {
+      const root=document.getElementById('toastRoot'); root.innerHTML=`<div class="toast">${esc(message)}</div>`;
+      setTimeout(()=>root.innerHTML='',2600);
+    }
+    function openModal(title,fields,module,submitLabel='Save record',onSubmit) {
+      const root=document.getElementById('modalRoot');
+      const fieldHtml=fields.map(([name,label,type,options])=>{
+        const control=type==='select'?`<select name="${name}" required>${options.split('|').map(o=>`<option>${esc(o)}</option>`).join('')}</select>`:type==='textarea'?`<textarea name="${name}" placeholder="${esc(options)}"></textarea>`:`<input name="${name}" type="${type}" placeholder="${esc(options)}" ${['text','date'].includes(type)?'required':''}>`;
+        return `<div class="field ${type==='textarea'?'full':''}"><label for="field-${name}">${label}</label>${control}</div>`;
+      }).join('');
+      root.innerHTML=`<div class="modal-backdrop" data-dismiss="true"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><h2 id="modalTitle">${title}</h2><button class="modal-close" aria-label="Close dialog">&times;</button></div><form class="modal-body" id="recordForm"><div class="form-grid">${fieldHtml}</div><div class="modal-actions"><button class="button" type="button" data-close>Cancel</button><button class="button primary" type="submit">${submitLabel}</button></div></form></section></div>`;
+      const form=root.querySelector('form');
+      form.addEventListener('submit',event=>{
+        event.preventDefault(); const values=Object.fromEntries(new FormData(form).entries());
+        if(onSubmit) {
+          onSubmit(values);
+          save(); root.innerHTML=''; render(); toast('Changes saved successfully.');
+          return;
+        }
+        const collection={inventory:'assets',tickets:'tickets',fleet:'vehicles',documents:'documents'}[module];
+        if(module==='inventory') { const next=String(Math.max(24000,...data.assets.map(a=>Number(a.id.split('-')[1])||0))+1); data.assets.unshift({id:`ICT-${next}`,name:values.name,category:values.category,assigned:values.assigned,custodian:values.custodian,condition:values.condition,status:values.condition==='Needs repair'?'Under repair':'In use',location:values.location}); }
+        if(module==='tickets') { const next=1049+data.tickets.length-4; const id=`HD-${next}`; data.tickets.unshift({id,title:values.title,category:values.category,priority:values.priority,requester:values.requester,unit:values.unit,status:'Open',updated:'Just now',description:values.description}); }
+        if(module==='fleet') { data.vehicles.unshift({...values}); data.tracking.unshift({id:values.id,type:'Vehicle',detail:`${values.name} · ${values.unit}`,location:values.location,time:'Just now',state:values.status}); }
+        if(module==='documents') { const next=83+data.documents.length-4; data.documents.unshift({id:`DOC-${String(next).padStart(4,'0')}`,...values}); }
+        save(); root.innerHTML=''; render(); toast('Record added successfully.');
+      });
+      root.querySelector('.modal-close').addEventListener('click',()=>root.innerHTML='');
+      root.querySelector('[data-close]').addEventListener('click',()=>root.innerHTML='');
+      root.querySelector('[data-dismiss]').addEventListener('click',event=>{if(event.target===event.currentTarget)root.innerHTML='';});
+      root.querySelector('input,select,textarea')?.focus();
+    }
+    function updateRow(kind,id) {
+      const map={asset:['assets','condition',['Good','Fair','Needs repair','Retired']],ticket:['tickets','status',['Open','In progress','Waiting','Resolved']],vehicle:['vehicles','status',['Available','On assignment','Maintenance','Out of service']],document:['documents','status',['Draft','For review','Approved','Archived']]};
+      const [collection,field,states]=map[kind]; const record=data[collection].find(item=>item.id===id); if(!record)return;
+      if(kind==='ticket'||kind==='vehicle'||kind==='document'||kind==='asset') {
+        const fields=[[field,`New ${field}`, 'select',states.join('|')]];
+        openModal(`${kind==='ticket'?'Update request':kind==='vehicle'?'Update vehicle':kind==='document'?'Update document':'Update asset'} · ${id}`,fields,kind,'Apply update',values=>{
+          record[field]=values[field];
+          if(kind==='ticket')record.updated='Just now';
+          if(kind==='vehicle'){
+            const track=data.tracking.find(item=>item.id===id);
+            if(track)track.state=values[field];
+          }
+        });
+        document.querySelector('#recordForm select').value=record[field];
+      }
+    }
+    document.addEventListener('click',event=>{
+      const nav=event.target.closest('[data-nav]');
+      if(nav){currentPage=nav.dataset.nav;moduleFilter='All records';render();document.getElementById('sidebar').classList.remove('open');document.getElementById('mobileScrim').classList.remove('visible');return;}
+      const add=event.target.closest('[data-action="add"]');
+      if(add){const config=moduleConfig[add.dataset.module];openModal(config.add,config.fields,add.dataset.module);return;}
+      const row=event.target.closest('[data-row-action]'); if(row){updateRow(row.dataset.rowAction,row.dataset.id);return;}
+      if(event.target.closest('[data-action="export"]')){exportData();return;}
+      if(event.target.closest('[data-action="refresh"]')){toast('Location records are up to date.');return;}
+      if(event.target.closest('#notificationsButton')){toast('You are all caught up.');return;}
+      if(event.target.closest('#menuButton')){document.getElementById('sidebar').classList.add('open');document.getElementById('mobileScrim').classList.add('visible');return;}
+      if(event.target.closest('#mobileScrim')){document.getElementById('sidebar').classList.remove('open');document.getElementById('mobileScrim').classList.remove('visible');}
+    });
+    document.addEventListener('change',event=>{
+      if(event.target.id==='moduleFilter'){moduleFilter=event.target.value;render();}
+      if(event.target.id==='trackingFilter'){const selected=event.target.value;document.querySelectorAll('.tracking-entry').forEach(row=>row.hidden=selected!=='All records'&&!row.textContent.includes(selected));}
+    });
+    document.addEventListener('input',event=>{
+      if(event.target.id==='globalSearch'){searchQuery=event.target.value;render();const field=document.getElementById('globalSearch');field.focus();field.setSelectionRange(searchQuery.length,searchQuery.length);}
+      if(event.target.id==='moduleSearch'){searchQuery=event.target.value;const pos=event.target.selectionStart;render();const field=document.getElementById('moduleSearch');field?.focus();field?.setSelectionRange(pos,pos);}
+    });
+    function exportData() {
+      const csvRows=[['Module','Record ID','Name / description','Status']];
+      for(const [key,items] of Object.entries({inventory:data.assets,tickets:data.tickets,fleet:data.vehicles,documents:data.documents})) for(const item of items) csvRows.push([key,item.id,item.title||item.name||item.id,item.status||item.condition||'']);
+      const csv=csvRows.map(row=>row.map(cell=>`"${String(cell).replaceAll('"','""')}"`).join(',')).join('\n');
+      const link=document.createElement('a');link.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));link.download='department-operations-export.csv';link.click();URL.revokeObjectURL(link.href);toast('Operations report exported.');
+    }
+    render();
+  </script>
+  <script src="workflow.js"></script>
+</body>
+</html>
